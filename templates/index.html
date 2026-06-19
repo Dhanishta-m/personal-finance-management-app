@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cyber Finance Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Orbitron',sans-serif;
+}
+
+body{
+background:#070b1a;
+color:white;
+min-height:100vh;
+overflow-x:hidden;
+}
+
+/* Glow Background */
+
+body::before{
+content:'';
+position:fixed;
+width:500px;
+height:500px;
+background:#00f7ff;
+filter:blur(250px);
+top:-150px;
+left:-150px;
+opacity:.15;
+}
+
+body::after{
+content:'';
+position:fixed;
+width:500px;
+height:500px;
+background:#ff00ff;
+filter:blur(250px);
+bottom:-150px;
+right:-150px;
+opacity:.15;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+padding:25px 40px;
+}
+
+.logo{
+font-size:28px;
+font-weight:700;
+color:#00f7ff;
+}
+
+.profile{
+padding:12px 20px;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.1);
+border-radius:50px;
+}
+
+.container{
+padding:20px 40px;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+margin-bottom:25px;
+}
+
+.card{
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(20px);
+padding:25px;
+border-radius:25px;
+border:1px solid rgba(255,255,255,.1);
+transition:.4s;
+}
+
+.card:hover{
+transform:translateY(-10px);
+box-shadow:0 0 25px #00f7ff;
+}
+
+.card h4{
+color:#94a3b8;
+margin-bottom:10px;
+}
+
+.card h2{
+font-size:32px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:20px;
+}
+
+.panel{
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(20px);
+padding:25px;
+border-radius:25px;
+border:1px solid rgba(255,255,255,.08);
+}
+
+.chart-placeholder{
+height:350px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:26px;
+color:#00f7ff;
+}
+
+.ring{
+width:220px;
+height:220px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+margin:auto;
+font-size:30px;
+font-weight:bold;
+}
+
+.ring::before{
+content:'78%';
+width:160px;
+height:160px;
+background:#070b1a;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+font-weight:bold;
+}
+
+.ai-box{
+background:#0f172a;
+padding:15px;
+border-radius:15px;
+margin-top:15px;
+border-left:4px solid #00f7ff;
+}
+
+.transactions{
+margin-top:20px;
+}
+
+.transaction{
+display:flex;
+justify-content:space-between;
+padding:15px;
+margin-bottom:10px;
+background:#0f172a;
+border-radius:15px;
+}
+
+.green{
+color:#00ff99;
+}
+
+.red{
+color:#ff4d6d;
+}
+
+@media(max-width:1000px){
+
+.cards{
+grid-template-columns:1fr 1fr;
+}
+
+.grid{
+grid-template-columns:1fr;
+}
+
+}
+
+@media(max-width:700px){
+
+.cards{
+grid-template-columns:1fr;
+}
+
+.container,
+.header{
+padding:20px;
+}
+
+}
+form{
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+form input{
+padding:15px;
+border:none;
+border-radius:12px;
+background:#0f172a;
+color:white;
+font-size:16px;
+outline:none;
+}
+
+form button{
+padding:15px;
+border:none;
+border-radius:12px;
+background:#00f7ff;
+color:#000;
+font-weight:bold;
+cursor:pointer;
+border-radius:12px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="header">
+
+<div class="logo">
+⚡ Self Budjet Saving
+</div>
+
+<div class="profile">
+👤 Dhanishta
+</div>
+
+</div>
+
+<div class="container">
+
+<div class="cards">
+
+<div class="card">
+<h4>Total Income</h4>
+<h2 id="incomeCard">₹25,000</h2>
+</div>
+
+<div class="card">
+<h4>Total Expense</h4>
+<h2 id="expenseCard">₹5300</h2>
+</div>
+
+<div class="card">
+<h4>Savings</h4>
+<h2 id="savingsCard">₹34,500</h2>
+</div>
+
+<div class="card">
+<h4>Investments</h4>
+<h2 id="investmentCard">₹18,000</h2>
+</div>
+
+</div>
+
+<div class="grid">
+
+<div>
+
+<div class="panel">
+
+<h3>📈 Revenue Analytics</h3>
+
+<div class="chart-placeholder">
+<canvas id="financeChart" height="120"></canvas>
+</div>
+
+</div>
+
+<div class="transactions">
+
+<h3 style="margin-bottom:15px;">
+Recent Transactions
+</h3>
+
+
+<div id="transactionList">
+
+<div class="transaction">
+<span>No Transactions Yet</span>
+<span>₹0</span>
+</div>
+
+</div>
+
+<div id="transactionList">
+
+<div class="transaction">
+<span>No Transactions Yet</span>
+<span>₹0</span>
+</div>
+
+</div>>
+
+<div id="transactionList">
+
+<div class="transaction">
+<span>No Transactions Yet</span>
+<span>₹0</span>
+</div>
+
+</div>
+<div class="panel" style="margin-top:20px;">
+
+<h3>➕ Update Financial Data</h3>
+
+<br>
+
+<form id="financeForm">
+
+<input type="number"
+id="income"
+placeholder="Enter Income"
+required>
+
+<input type="number"
+id="expense"
+placeholder="Enter Expense"
+required>
+
+<input type="number"
+id="savings"
+placeholder="Enter Savings"
+required>
+
+<input type="number"
+id="investment"
+placeholder="Enter Investment"
+required>
+
+<button type="submit">
+Update Dashboard
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<div class="panel">
+
+<h3>🎯 Budget Ring</h3>
+
+<br>
+
+<div class="ring" id="budgetRing">
+    <span id="ringValue">0%</span>
+</div>
+
+</div>
+
+<br>
+
+<div class="panel">
+
+<h3>🤖 AI Insights</h3>
+
+<div class="ai-box" id="aiInsight1">
+Waiting for data...
+</div>
+
+<div class="ai-box" id="aiInsight2">
+Waiting for data...
+</div>
+
+<div class="ai-box" id="aiInsight3">
+Waiting for data...
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+<script>
+
+document.getElementById("financeForm")
+.addEventListener("submit",function(e){
+
+e.preventDefault();
+
+document.getElementById("incomeCard").innerText =
+"₹" + document.getElementById("income").value;
+
+document.getElementById("expenseCard").innerText =
+"₹" + document.getElementById("expense").value;
+
+document.getElementById("savingsCard").innerText =
+"₹" + document.getElementById("savings").value;
+
+document.getElementById("investmentCard").innerText =
+"₹" + document.getElementById("investment").value;
+
+});
+
+</script>
+<script>
+
+document.getElementById("financeForm")
+.addEventListener("submit",function(e){
+
+e.preventDefault();
+
+let income =
+parseFloat(document.getElementById("income").value);
+
+let expense =
+parseFloat(document.getElementById("expense").value);
+
+let savings =
+parseFloat(document.getElementById("savings").value);
+
+let investment =
+parseFloat(document.getElementById("investment").value);
+
+/* Cards */
+
+document.getElementById("incomeCard").innerText =
+"₹"+income.toLocaleString();
+
+document.getElementById("expenseCard").innerText =
+"₹"+expense.toLocaleString();
+
+document.getElementById("savingsCard").innerText =
+"₹"+savings.toLocaleString();
+
+document.getElementById("investmentCard").innerText =
+"₹"+investment.toLocaleString();
+
+/* Budget Ring */
+
+let percent =
+Math.round((expense/income)*100);
+
+document.getElementById("budgetRing").style.background =
+`conic-gradient(
+#00f7ff 0% ${percent}%,
+rgba(255,255,255,.1) ${percent}% 100%
+)`;
+
+document.getElementById("ringValue").innerText =
+percent+"%";
+
+/* AI Insights */
+
+document.getElementById("aiInsight1").innerText =
+`Expense Ratio : ${percent}%`;
+
+document.getElementById("aiInsight2").innerText =
+`Expected Savings : ₹${savings.toLocaleString()}`;
+
+document.getElementById("aiInsight3").innerText =
+`Investment Amount : ₹${investment.toLocaleString()}`;
+
+/* Recent Transaction */
+
+document.getElementById("transactionList").innerHTML =
+
+`
+<div class="transaction">
+<span>💼 Income Added</span>
+<span class="green">+₹${income}</span>
+</div>
+
+<div class="transaction">
+<span>💳 Expense Added</span>
+<span class="red">-₹${expense}</span>
+</div>
+
+<div class="transaction">
+<span>🏦 Investment</span>
+<span class="green">₹${investment}</span>
+</div>
+`;
+
+});
+
+/* Chart */
+
+const ctx =
+document.getElementById("financeChart");
+
+new Chart(ctx,{
+type:'bar',
+data:{
+labels:['Income','Expense','Savings','Investment'],
+datasets:[{
+data:[0,0,0,0],
+backgroundColor:[
+'#00f7ff',
+'#ff4d6d',
+'#00ff99',
+'#ffcc00'
+]
+}]
+},
+options:{
+responsive:true,
+maintainAspectRatio:false
+}
+});
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+</body>
+</html>
